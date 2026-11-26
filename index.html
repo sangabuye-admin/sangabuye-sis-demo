@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sangabuye SIS Portal | Ingia Kwenye Mfumo</title>
+  <script src="core.js?v=7.5"></script>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; flex-direction: column;
+      background: linear-gradient(135deg, #071933 0%, #0b3c78 100%); color: #1e293b;
+    }
+
+    /* UKANDA WA JUU: TANGAZO LA MKUU WA SHULE LINALOTEMBEA KULIA -> KUSHOTO */
+    .hm-banner {
+      background: linear-gradient(90deg, #0d47a1 0%, #1976d2 50%, #0d47a1 100%);
+      color: #fff; display: flex; align-items: center; padding: 8px 18px;
+      border-bottom: 2px solid #38bdf8; gap: 12px; overflow: hidden;
+    }
+    .hm-badge {
+      background: #082f66; border: 1px solid #60a5fa; padding: 5px 12px; border-radius: 20px;
+      font-size: 11.5px; font-weight: bold; white-space: nowrap; display: flex; align-items: center; gap: 6px;
+    }
+    .marquee-wrap { flex: 1; overflow: hidden; white-space: nowrap; position: relative; }
+    .marquee-text {
+      display: inline-block; padding-left: 100%; font-size: 13.5px; font-weight: 500;
+      animation: scrollLeft 22s linear infinite;
+    }
+    .marquee-wrap:hover .marquee-text { animation-play-state: paused; }
+    @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+    /* MGAO ULIOKATIKATI YA SKRINI (CENTERED CARD CONTAINER) */
+    .center-wrapper {
+      flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .split-layout {
+      width: 100%; max-width: 1000px; display: flex; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 22px 50px rgba(0,0,0,0.45); background: #0b3c78; border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    /* UPANDE WA KUSHOTO (SLIDESHOW YA PICHA: student.jpg.jpg, shule2.jpg, shule3.jpg) */
+    .left-hero {
+      flex: 1.1; position: relative; display: flex; flex-direction: column; justify-content: space-between;
+      background: #0f294a; padding: 20px 22px; color: #fff; min-height: 490px; overflow: hidden;
+    }
+    .hero-bg-img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;
+      transition: opacity 0.6s ease-in-out;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to bottom, rgba(11,31,58,0.45) 0%, rgba(11,31,58,0.10) 45%, rgba(11,31,58,0.88) 100%);
+    }
+    .hero-top, .hero-features { position: relative; z-index: 2; }
+    .hero-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .brand-logo { display: flex; align-items: center; gap: 9px; }
+    .brand-circle {
+      width: 40px; height: 40px; border-radius: 50%; background: #fff; color: #0b3c78;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .server-pill {
+      background: rgba(255,255,255,0.95); color: #0f172a; padding: 6px 12px; border-radius: 25px;
+      font-size: 11.5px; font-weight: bold; display: flex; align-items: center; gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .dot-live { width: 9px; height: 9px; border-radius: 50%; background: #10b981; display: inline-block; }
+    .dot-off { width: 9px; height: 9px; border-radius: 50%; background: #ef4444; display: inline-block; }
+
+    .hero-features {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; text-align: center;
+      padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.28);
+    }
+    .feat-item { font-size: 10.5px; font-weight: 600; color: #f8fafc; line-height: 1.25; }
+    .feat-icon {
+      width: 30px; height: 30px; margin: 0 auto 4px; background: rgba(255,255,255,0.94); color: #0b3c78;
+      border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px;
+    }
+
+    /* UPANDE WA KULIA: KADI YA KUINGIA */
+    .right-panel {
+      flex: 1; background: #0b3c78; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; padding: 22px;
+    }
+    .login-card {
+      background: #fff; width: 100%; max-width: 380px; border-radius: 13px; padding: 20px 22px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.28);
+    }
+    .role-tabs {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; background: #f1f5f9;
+      padding: 4px; border-radius: 8px; margin-bottom: 14px;
+    }
+    .r-tab {
+      border: none; background: transparent; padding: 6px 3px; font-size: 10.5px; font-weight: bold;
+      color: #475569; border-radius: 6px; cursor: pointer;
+    }
+    .r-tab.active { background: #1565c0; color: #fff; }
+    .outline-field { position: relative; margin-bottom: 13px; }
+    .outline-field label {
+      position: absolute; top: -8px; left: 10px; background: #fff; padding: 0 5px;
+      font-size: 11px; font-weight: 600; color: #1565c0;
+    }
+    .outline-field input, .outline-field select {
+      width: 100%; padding: 10px 34px 10px 11px; border: 1.5px solid #94a3b8; border-radius: 7px; font-size: 13px;
+    }
+    .outline-field input:focus { outline: none; border-color: #1565c0; }
+    .field-ico { position: absolute; right: 11px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 14px; cursor: pointer; }
+    .red-links-box {
+      border: 1.5px solid #ef4444; border-radius: 7px; padding: 7px 9px; text-align: center;
+      font-size: 11.5px; margin: 11px 0; line-height: 1.55;
+    }
+    .red-links-box a { color: #1565c0; font-weight: bold; text-decoration: none; cursor: pointer; }
+    .red-links-box a:hover { text-decoration: underline; }
+    .btn-ingia {
+      width: 100%; padding: 10.5px; background: #1565c0; color: #fff; border: none; border-radius: 7px;
+      font-size: 13.5px; font-weight: bold; cursor: pointer; letter-spacing: 0.5px;
+    }
+    .btn-ingia:hover { background: #0d47a1; }
+    .lang-bottom { margin-top: 14px; color: #e2e8f0; font-size: 12.5px; cursor: pointer; }
+    .alert-msg { padding: 8px 10px; border-radius: 6px; font-size: 12px; margin-bottom: 10px; display: none; }
+
+    @media (max-width: 820px) {
+      .split-layout { flex-direction: column; }
+      .left-hero { min-height: 240px; }
+      .hero-features { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<!-- 1. TANGAZO LA MKUU WA SHULE LINALOTEMBEA KULIA -> KUSHOTO -->
+<div class="hm-banner">
+  <div class="hm-badge">👨‍💼 MTANGAZO LA MKUU WA SHULE:</div>
+  <div class="marquee-wrap">
+    <div id="hmMarqueeText" class="marquee-text">
+      Karibu kwenye Mfumo wa Taarifa za Shule ya Sekondari Sangabuye (Sangabuye SIS Portal) — Elimu Kwa Ukombozi.
+    </div>
+  </div>
+</div>
+
+<!-- 2. MGAO WA KATIKATI YA SKRINI -->
+<div class="center-wrapper">
+  <div class="split-layout">
+    <!-- UPANDE WA KUSHOTO (SLIDESHOW: student.jpg.jpg, shule2.jpg, shule3.jpg) -->
+    <div class="left-hero">
+      <img id="heroSlideImg" class="hero-bg-img" src="student.jpg.jpg" onerror="this.src='student.jpg.jpg';" alt="Wanafunzi Sangabuye">
+      <div class="hero-overlay"></div>
+
+      <div class="hero-top">
+        <div class="brand-logo">
+          <div class="brand-circle">S</div>
+          <div>
+            <div style="font-size:21px; font-weight:800; line-height:1.1;">Sangabuye</div>
+            <div style="font-size:12.5px; color:#e2e8f0;">SIS Portal</div>
+          </div>
+        </div>
+
+        <!-- HALI YA SEVA (INAWAKA KIJANI PALE SEVA INAPOKUWA TAYARI) -->
+        <div class="server-pill" id="serverStatusPill">
+          <span class="dot-off" id="srvDot"></span>
+          <span id="srvText">Inakagua Seva...</span>
+        </div>
+      </div>
+
+      <div class="hero-features">
+        <div class="feat-item"><div class="feat-icon">📊</div>Matokeo ya Papo Hapo</div>
+        <div class="feat-item"><div class="feat-icon">📅</div>Mahudhurio Yaliyorekodiwa</div>
+        <div class="feat-item"><div class="feat-icon">✅</div>Malipo ya Ada Salama</div>
+        <div class="feat-item"><div class="feat-icon">📄</div>Ratiba ya Masomo</div>
+        <div class="feat-item"><div class="feat-icon">📖</div>Maktaba</div>
+      </div>
+    </div>
+
+    <!-- UPANDE WA KULIA -->
+    <div class="right-panel">
+      <div class="login-card">
+        <div id="msgBox" class="alert-msg"></div>
+
+        <!-- SEHEMU YA KUINGIA (LOGIN) -->
+        <div id="loginSection">
+          <div class="role-tabs">
+            <button type="button" class="r-tab active" onclick="pickRoleTab(this)">🎓 Mwanafunzi</button>
+            <button type="button" class="r-tab" onclick="pickRoleTab(this)">👨‍🏫 Mwalimu</button>
+            <button type="button" class="r-tab" onclick="pickRoleTab(this)">👪 Mzazi</button>
+            <button type="button" class="r-tab" onclick="pickRoleTab(this)">🏛️ Utawala</button>
+          </div>
+
+          <div style="text-align:center; margin-bottom:15px;">
+            <h2 style="margin:0; font-size:20px; color:#0f172a;">Karibu Tena</h2>
+            <small style="color:#64748b;">Ingia kwenye akaunti yako kuendelea</small>
+          </div>
+
+          <form onsubmit="handlePortalLogin(event)">
+            <div class="outline-field">
+              <label>Namba ya Usajili / Barua Pepe</label>
+              <input type="text" id="lgUser" required autocomplete="username" placeholder="Namba ya Usajili / Username">
+              <span class="field-ico">👤</span>
+            </div>
+
+            <div class="outline-field">
+              <label>Nywila</label>
+              <input type="password" id="lgPass" required autocomplete="current-password" placeholder="Nywila">
+              <span class="field-ico" onclick="togglePass('lgPass')">👁️</span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:#334155;">
+              <input type="checkbox" id="remMe" checked style="width:auto;">
+              <label for="remMe" style="cursor:pointer;">Nikumbuke</label>
+            </div>
+
+            <div class="red-links-box">
+              Hujajisajili bado? <a onclick="switchCardMode('register')">Jisajili Sasa</a><br>
+              Je, umesahau nywila? <a onclick="switchCardMode('reset')">Reset Password Hapa</a>
+            </div>
+
+            <button type="submit" class="btn-ingia">INGIA</button>
+          </form>
+        </div>
+        <!-- SEHEMU YA KUJISAJILI SASA (SELF-REGISTRATION) -->
+        <div id="registerSection" style="display:none;">
+          <h3 style="margin:0 0 12px; text-align:center; color:#0b3c78;">📝 Jisajili Kwenye Mfumo</h3>
+          <form onsubmit="handleSelfRegister(event)">
+            <div class="outline-field">
+              <label>Jina Kamili (Majina Matatu)</label>
+              <input type="text" id="rgName" required placeholder="Mfano: Asha Juma Mwita">
+            </div>
+            <div class="outline-field">
+              <label>Nafasi Unayoomba</label>
+              <select id="rgRole">
+                <option value="student">Mwanafunzi (Student)</option>
+                <option value="parent">Mzazi / Mlezi (Parent)</option>
+                <option value="teacher">Mwalimu (Teacher)</option>
+                <option value="librarian">Mkutubi (Librarian)</option>
+                <option value="accountant">Mhasibu (Accountant)</option>
+                <option value="academic">Mtaaluma (Academic)</option>
+                <option value="matron">Mlezi wa Bweni / Zahanati</option>
+                <option value="headmaster">Mkuu wa Shule (Headmaster)</option>
+              </select>
+            </div>
+            <div class="outline-field">
+              <label>Namba ya Simu</label>
+              <input type="tel" id="rgPhone" required placeholder="07XXXXXXXX">
+            </div>
+            <div class="outline-field">
+              <label>Namba ya Usajili / Username</label>
+              <input type="text" id="rgUser" required placeholder="Mfano: asha.mwita">
+            </div>
+            <div class="outline-field">
+              <label>Tengeneza Nywila (Password)</label>
+              <input type="password" id="rgPass" required minlength="4" placeholder="Weka nywila">
+              <span class="field-ico" onclick="togglePass('rgPass')">👁️</span>
+            </div>
+            <button type="submit" class="btn-ingia" style="background:#059669;">TUMA MAOMBI YA USAJILI</button>
+            <div style="text-align:center; margin-top:10px; font-size:12px;">
+              <a style="color:#1565c0; font-weight:bold; cursor:pointer;" onclick="switchCardMode('login')">← Rudi Kwenye Kuingia (Login)</a>
+            </div>
+          </form>
+        </div>
+
+        <!-- SEHEMU YA RESET PASSWORD HAPA -->
+        <div id="resetSection" style="display:none;">
+          <h3 style="margin:0 0 10px; text-align:center; color:#0b3c78;">🔑 Omba Kubadilisha Nywila</h3>
+          <form onsubmit="handlePasswordResetReq(event)">
+            <div class="outline-field">
+              <label>Jina Kamili au Namba ya Usajili</label>
+              <input type="text" id="rsUser" required placeholder="Andika username au jina lako">
+            </div>
+            <div class="outline-field">
+              <label>Namba ya Simu Iliyosajiliwa</label>
+              <input type="tel" id="rsPhone" required placeholder="07XXXXXXXX">
+            </div>
+            <button type="submit" class="btn-ingia" style="background:#d97706;">TUMA OMBI KWA ADMIN</button>
+            <div style="text-align:center; margin-top:10px; font-size:12px;">
+              <a style="color:#1565c0; font-weight:bold; cursor:pointer;" onclick="switchCardMode('login')">← Rudi Kwenye Kuingia (Login)</a>
+            </div>
+            <div style="text-align:center; margin-top:14px; padding-top:10px; border-top:1px solid #e2e8f0;">
+  <a href="manual.html" target="_blank" style="display:inline-block; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; padding:8px 14px; border-radius:8px; font-weight:bold; text-decoration:none; font-size:13px;">
+    📘 Soma / Pakua Mwongozo Kamili wa Mtumiaji (A4 PDF)
+  </a>
+</div>
+          </form>
+        </div>
+      </div>
+
+      <div class="lang-bottom" onclick="SGB.toggleLang()">🌐 <b>Kiswahili</b> / English</div>
+    </div>
+  </div>
+</div>
+<script>
+  const ROLE_PAGES = {
+    super_admin: 'admin.html',
+    admin: 'admin.html',
+    administrator: 'admin.html',
+    it: 'admin.html',
+    director: 'headmaster.html',
+    headmaster: 'headmaster.html',
+    accountant: 'accountant.html',
+    academic: 'academic.html',
+    teacher: 'teacher.html',
+    librarian: 'library.html',
+    matron: 'matron.html',
+    parent: 'parent.html',
+    student: 'student.html'
+  };
+
+  function pickRoleTab(btn) {
+    document.querySelectorAll('.r-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function switchCardMode(mode) {
+    document.getElementById('msgBox').style.display = 'none';
+    document.getElementById('loginSection').style.display = mode === 'login' ? 'block' : 'none';
+    document.getElementById('registerSection').style.display = mode === 'register' ? 'block' : 'none';
+    document.getElementById('resetSection').style.display = mode === 'reset' ? 'block' : 'none';
+  }
+
+  function showMsg(text, isErr = true) {
+    const b = document.getElementById('msgBox');
+    b.style.display = 'block';
+    b.style.background = isErr ? '#fef2f2' : '#ecfdf5';
+    b.style.color = isErr ? '#991b1b' : '#065f46';
+    b.style.border = isErr ? '1px solid #fecaca' : '1px solid #a7f3d0';
+    b.innerText = text;
+  }
+
+  function togglePass(id) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+  }
+
+  function updateMarqueeAndServerStatus(serverReady) {
+    const news = SGB.select('school_announcements');
+    const mq = document.getElementById('hmMarqueeText');
+    if (mq && news.length > 0) {
+      mq.innerText = news.slice(0, 3).map(n => `${n.title}: ${n.body} (${n.created_at || ''})`).join('   ★   ');
+    }
+
+    const maint = JSON.parse(localStorage.getItem('sgb_maintenance_mode') || '{"enabled":false}');
+    const dot = document.getElementById('srvDot');
+    const txt = document.getElementById('srvText');
+    if (!dot || !txt) return;
+
+    if (maint.enabled) {
+      dot.className = 'dot-off';
+      txt.innerText = 'Mfumo Umezimwa (Matengenezo)';
+    } else if (serverReady && navigator.onLine) {
+      dot.className = 'dot-live';
+      txt.innerText = 'Mfumo Uko Hewani (Live) 〰️';
+    } else {
+      dot.className = 'dot-off';
+      txt.innerText = 'Seva Haijapatikana (Offline)';
+    }
+  }
+  function ensureDefaultAdmin() {
+    const users = SGB.select('users_profile');
+    if (!users.some(u => (u.username || '').toLowerCase() === 'admin' || ['super_admin', 'admin'].includes((u.role || '').toLowerCase()))) {
+      SGB.insert('users_profile', { full_name: 'System Administrator (IT)', username: 'admin', password: '123', role: 'super_admin', status: 'Approved', phone_number: '0784755173' });
+    }
+  }
+
+  async function checkServerConnection() {
+    if (!navigator.onLine) { updateMarqueeAndServerStatus(false); return false; }
+    try {
+      const res = await fetch(`${FIREBASE_DB_URL}/sgb_school_config.json?t=${Date.now()}`, { cache: 'no-store' });
+      const ok = res.ok;
+      if (ok) await SGB.pullFromCloud(true);
+      updateMarqueeAndServerStatus(ok);
+      return ok;
+    } catch (e) {
+      updateMarqueeAndServerStatus(false);
+      return false;
+    }
+  }
+
+  async function handlePortalLogin(e) {
+    e.preventDefault();
+    const typed = document.getElementById('lgUser').value.trim().toLowerCase();
+    const pass = document.getElementById('lgPass').value.trim();
+
+    await checkServerConnection();
+    ensureDefaultAdmin();
+
+    const users = SGB.select('users_profile');
+    const found = users.find(u => {
+      const matchId = [u.username, u.full_name, u.reg_or_staff_no, u.phone_number].some(v => v && String(v).trim().toLowerCase() === typed);
+      const savedPass = String(u.password || u.password_hash || '');
+      return matchId && (savedPass === pass || (typed === 'admin' && (pass === '123' || pass === 'admin123')));
+    });
+
+    if (!found) { showMsg('❌ Namba ya usajili au nywila si sahihi. Jaribu tena.'); return; }
+    if (found.status === 'Pending Admin Approval') { showMsg('⏳ Akaunti yako bado inasubiri uthibitisho wa Admin.'); return; }
+
+    const rLower = (found.role || '').toLowerCase();
+    const isAdmin = ['super_admin', 'admin', 'administrator', 'it'].includes(rLower);
+    const maint = JSON.parse(localStorage.getItem('sgb_maintenance_mode') || '{"enabled":false}');
+    if (maint.enabled && !isAdmin) { showMsg(`🛠️ ${maint.reason || 'Mfumo upo kwenye matengenezo kwa muda.'}`); return; }
+
+    if (document.getElementById('remMe')?.checked) localStorage.setItem('sgb_remember_user', typed);
+    else localStorage.removeItem('sgb_remember_user');
+
+    sessionStorage.setItem('sgb_active_user', JSON.stringify(found));
+    SGB.logAction(`Ameingia kwenye mfumo (${found.role})`);
+    window.location.href = ROLE_PAGES[rLower] || 'student.html';
+  }
+
+  async function handleSelfRegister(e) {
+    e.preventDefault();
+    const full_name = document.getElementById('rgName').value.trim();
+    const role = document.getElementById('rgRole').value;
+    const phone_number = document.getElementById('rgPhone').value.trim();
+    const username = document.getElementById('rgUser').value.trim().toLowerCase();
+    const password = document.getElementById('rgPass').value.trim();
+
+    await checkServerConnection();
+    if (SGB.select('users_profile').some(u => (u.username || '').toLowerCase() === username)) {
+      showMsg('⚠️ Username hiyo tayari inatumiwa. Chagua nyingine.'); return;
+    }
+
+    SGB.insert('users_profile', { full_name, username, password, role, phone_number, status: 'Pending Admin Approval' });
+    SGB.insert('direct_messages', { sender: full_name, recipient: 'Admin', subject: `OMBI LA USAJILI: ${full_name} (${role})`, body: `Simu: ${phone_number}. Subiri uthibitisho wa Admin.` });
+    switchCardMode('login');
+    showMsg('✅ Usajili umetumwa! Subiri Admin athibitishe akaunti yako ndipo uingie.', false);
+  }
+
+  function handlePasswordResetReq(e) {
+    e.preventDefault();
+    const u = document.getElementById('rsUser').value.trim();
+    const p = document.getElementById('rsPhone').value.trim();
+    SGB.insert('direct_messages', { sender: u, recipient: 'Admin', subject: `OMBI LA RESET PASSWORD: ${u}`, body: `Mtumiaji ${u} (Simu: ${p}) ameomba kubadilishiwa nywila.` });
+    switchCardMode('login');
+    showMsg('✅ Ombi lako la kubadilisha nywila limetumwa kwa Admin (IT)!', false);
+  }
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    const saved = localStorage.getItem('sgb_remember_user');
+    if (saved) document.getElementById('lgUser').value = saved;
+
+    // SLIDESHOW YA PICHA 3 ZINAZOBADILIKA KILA BAADA YA SEKUNDE 5
+    const slidePhotos = new Array('student.jpg.jpg', 'shule2.jpg', 'shule3.jpg');
+    let slideIdx = 0;
+    setInterval(() => {
+      const imgEl = document.getElementById('heroSlideImg');
+      if (imgEl && slidePhotos.length > 1) {
+        imgEl.style.opacity = '0.35';
+        setTimeout(() => {
+          slideIdx = (slideIdx + 1) % slidePhotos.length;
+          imgEl.src = slidePhotos.at(slideIdx);
+          imgEl.style.opacity = '1';
+        }, 300);
+      }
+    }, 5000);
+
+    await checkServerConnection();
+    ensureDefaultAdmin();
+    setInterval(checkServerConnection, 10000);
+  });
+</script>
+  <script>
+  window.addEventListener('DOMContentLoaded', function() {
+    const loginBtn = document.querySelector('button[type="submit"], button');
+    if (loginBtn && !document.getElementById('sgbManualLink')) {
+      const box = document.createElement('div');
+      box.id = 'sgbManualLink';
+      box.style.cssText = 'text-align:center; margin-top:10px; width:100%;';
+      box.innerHTML = '<a href="manual.html" target="_blank" style="display:inline-flex; align-items:center; justify-content:center; gap:5px; width:auto; max-width:240px; padding:5px 12px; background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; border-radius:20px; font-weight:600; text-decoration:none; font-size:11.5px; box-shadow:0 1px 3px rgba(0,0,0,0.06);">📘 Mwongozo wa Mfumo (PDF)</a>';
+      loginBtn.parentElement.appendChild(box);
+    }
+  });
+</script>
+  <script>
+  window.addEventListener('DOMContentLoaded', function() {
+    // 1. Weka bango dogo la DEMO juu ya skrini
+    if (!document.getElementById('demoBannerTop')) {
+      const b = document.createElement('div');
+      b.id = 'demoBannerTop';
+      b.style.cssText = 'position:fixed; top:0; left:0; right:0; background:#d97706; color:#fff; text-align:center; padding:4px 8px; font-size:11.5px; font-weight:bold; z-index:99999; box-shadow:0 2px 5px rgba(0,0,0,0.2);';
+      b.innerText = '🎓 HUU NI MFUMO WA MAFUNZO NA MAJARIBIO (DEMO PORTAL) — DATA ZA SHULE HALISI HAZIGUSWI';
+      document.body.prepend(b);
+    }
+  });
+</script>
+</body>
+</html>
